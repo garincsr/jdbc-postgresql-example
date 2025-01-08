@@ -65,7 +65,29 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product get(Integer id) {
-        return null;
+        Product product = new Product();
+        try(
+                Connection connect = DBConnector.getConnection();
+                PreparedStatement preparedStatement = connect.prepareStatement(
+                        ProductQuery.GET_BY_ID.getQuery()
+                )
+        ){
+            preparedStatement.setInt(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                product = new Product();
+                product.setId(resultSet.getInt(ProductColumn.ID.getColumnName()));
+                product.setName(resultSet.getString(ProductColumn.NAME.getColumnName()));
+                product.setPrice(resultSet.getInt(ProductColumn.PRICE.getColumnName()));
+            } else {
+                System.out.println("Product with ID " + id + " not found.");
+            }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return product;
     }
 
     @Override

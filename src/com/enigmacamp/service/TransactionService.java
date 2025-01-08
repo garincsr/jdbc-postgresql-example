@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface TransactionService {
     void createTransaction(TransactionRequest transactionRequest);
-    void createTrxDetails(TransactionDetailRequest transactionDetailRequest);
+    void createTrxDetails(int transactionId, TransactionDetailRequest transactionDetailRequest);
 }
 

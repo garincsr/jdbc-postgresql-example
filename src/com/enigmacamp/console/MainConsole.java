@@ -2,7 +2,11 @@ package com.enigmacamp.console;
 
 import com.enigmacamp.config.DBConnector;
 import com.enigmacamp.entitiy.Product;
+import com.enigmacamp.service.ProductService;
+import com.enigmacamp.service.TransactionService;
+import com.enigmacamp.service.impl.CustomerServiceImpl;
 import com.enigmacamp.service.impl.ProductServiceImpl;
+import com.enigmacamp.service.impl.TransactionServiceImpl;
 import com.enigmacamp.utils.InputHandler;
 
 import java.sql.Connection;
@@ -10,10 +14,14 @@ import java.sql.Connection;
 public class MainConsole {
     private InputHandler inputHandler;
     private ProductConsole productConsole;
+    private CustomerConsole customerConsole;
+    private TransactionConsole transactionConsole
 
     public MainConsole(InputHandler inputHandler){
         this.inputHandler = inputHandler;
         this.productConsole = new ProductConsole(new ProductServiceImpl(), this.inputHandler);
+        this.customerConsole = new CustomerConsole(new CustomerServiceImpl(), this.inputHandler);
+        this.transactionConsole = new TransactionConsole(new TransactionServiceImpl(), this.inputHandler);
     }
 
     private void showMenu(){
@@ -33,7 +41,7 @@ public class MainConsole {
                     this.productConsole.run();
                     break;
                 case 2:
-                    System.out.println("Customer Management");
+                    this.customerConsole.run();
                     break;
                 case 3:
                     System.out.println("Transaction");

@@ -25,4 +25,17 @@ public class InputHandler {
         System.out.print(prompt);
         return scanner.nextLine();
     }
+
+    public String getDateString(String prompt) {
+        String regex = "\\d{4}-\\d{2}-\\d{2}"; // Regex untuk format yyyy-MM-dd
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine();
+            if (input.matches(regex)) {
+                return input; // Jika format sesuai, kembalikan input
+            } else {
+                System.out.println("Invalid date format. Please enter in the format: yyyy-MM-dd");
+            }
+        }
+    }
 }
