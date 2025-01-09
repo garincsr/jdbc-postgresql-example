@@ -41,6 +41,11 @@ public class CustomerConsole {
                     break;
                 case 4:
                     this.getCustomerByPhoneNumber();
+                case 5:
+                    System.out.println("Update Customer");
+                    break;
+                case 6:
+                    return;
                 default:
                     System.out.println("Pilihan tidak valid");
             }

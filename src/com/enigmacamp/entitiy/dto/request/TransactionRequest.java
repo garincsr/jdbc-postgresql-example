@@ -26,5 +26,13 @@ public class TransactionRequest {
     public void setTrxDetails(List<TransactionDetailRequest> trxDetails) {
         this.trxDetails = trxDetails;
     }
+
+    @Override
+    public String toString() {
+        return "TransactionRequest{" +
+                "customerId=" + customerId +
+                ", trxDetails=" + trxDetails +
+                '}';
+    }
 }
 

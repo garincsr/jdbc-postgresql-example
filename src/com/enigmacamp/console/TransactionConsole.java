@@ -2,6 +2,8 @@ package com.enigmacamp.console;
 
 import com.enigmacamp.entitiy.Customer;
 import com.enigmacamp.entitiy.Product;
+import com.enigmacamp.entitiy.Transaction;
+import com.enigmacamp.entitiy.TransactionDetail;
 import com.enigmacamp.entitiy.dto.request.TransactionDetailRequest;
 import com.enigmacamp.entitiy.dto.request.TransactionRequest;
 import com.enigmacamp.service.CustomerService;
@@ -33,12 +35,14 @@ public class TransactionConsole {
     }
 
     public void run(){
-        while (true){
+        Boolean isContinue = true;
+        while (isContinue){
             this.showMenu();
             int choice = this.inputHandler.getInt("Pilih menu: ");
             switch (choice){
                 case 1:
                     this.createTransaction();
+                    isContinue = false;
                     break;
                 case 2:
                     System.out.println("View Transaction");
@@ -102,12 +106,18 @@ public class TransactionConsole {
     private void isFirstTimeCustomer(){
         System.out.println("=== Wellcome New Customer ===");
         Customer firstTimeCustomer = customerConsole.createNewCustomerHandler();
+        if (firstTimeCustomer == null){
+            return;
+        }
 
         System.out.printf("Selamat datang %s di Enigma Laundry", firstTimeCustomer.getName());
+
+        chooseProducts(firstTimeCustomer.getId());
     }
 
     private void chooseProducts(int customerId){
         List<TransactionDetailRequest> transactionDetails = new ArrayList<>();
+
         System.out.println("=== Choose Products ===");
         List<Product> products = productService.getAll();
         products.stream()
@@ -122,11 +132,12 @@ public class TransactionConsole {
         Boolean isContinue = true;
         while (isContinue){
             TransactionDetailRequest transactionDetail = chooseProduct();
-            if (transactionDetail == null){
+            if (transactionDetail != null){
                 transactionDetails.add(transactionDetail);
             }
             System.out.println("Transaction success!");
-            int choice = this.inputHandler.getInt("Would you buy another product? (1. Yes, 2. No)");
+
+            int choice = this.inputHandler.getInt("Would you buy another product? (1. Yes, 2. No) ");
             switch (choice){
                 case 1:
                     continue;
@@ -153,7 +164,7 @@ public class TransactionConsole {
             return null;
         }
 
-        return new TransactionDetailRequest(product.getId(),askProductQty);
+        return new TransactionDetailRequest(askProductQty,product.getId());
     }
 
 }

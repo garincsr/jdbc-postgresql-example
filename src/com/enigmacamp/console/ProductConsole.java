@@ -40,10 +40,13 @@ public class ProductConsole {
                     this.getProductById();
                     break;
                 case 4:
-                    return;
+                    System.out.println("Update Product");
+                    break;
                 case 5:
                     this.deleteProductById();
                     break;
+                case 6:
+                    return;
                 default:
                     System.out.println("Pilihan tidak valid");
             }
