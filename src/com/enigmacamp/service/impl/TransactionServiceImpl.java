@@ -18,11 +18,9 @@ import java.sql.SQLException;
 
 public class TransactionServiceImpl implements TransactionService {
     ProductService productService;
-    CustomerService customerService;
 
-    public TransactionServiceImpl(ProductService productService, CustomerService customerService) {
+    public TransactionServiceImpl(ProductService productService) {
         this.productService = productService;
-        this.customerService = customerService;
     }
 
     @Override
@@ -34,11 +32,16 @@ public class TransactionServiceImpl implements TransactionService {
                 )
         ){
             preparedStatement.setInt(1, transactionRequest.getCustomerId());
+            preparedStatement.executeUpdate();
 
-            int Id = preparedStatement.getResultSet().getInt(TransactionColumn.ID.getColumnName());
-            transactionRequest.getTrxDetails().stream()
+            ResultSet resultSet = preparedStatement.getResultSet();
+            resultSet.next();
+
+            int transactionId = resultSet.getInt(TransactionColumn.ID.getColumnName());
+
+            transactionRequest.getTrxDetails()
                     .forEach(trx -> {
-                        createTrxDetails(Id,trx);
+                        createTrxDetails(transactionId,trx);
                     });
         }catch (SQLException e){
             System.out.print(e.getMessage());

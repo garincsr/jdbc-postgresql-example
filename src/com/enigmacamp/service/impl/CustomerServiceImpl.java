@@ -138,7 +138,7 @@ public class CustomerServiceImpl implements CustomerService {
                 customer.setPhoneNumber(resultSet.getString(CustomerColumn.PHONE_NUMBER.getColumnName()));
                 customer.setBirthDate(resultSet.getString(CustomerColumn.BIRTH_DATE.getColumnName()));
             } else {
-                System.out.println("Product with ID " + id + " not found.");
+                System.out.println("Customer with Phone Number " + phoneNumber + " not found.");
             }
 
         }catch (SQLException e){

@@ -92,6 +92,21 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Boolean delete(Integer id) {
-        return null;
+        Boolean status = false;
+        try(
+                Connection connect = DBConnector.getConnection();
+                PreparedStatement preparedStatement = connect.prepareStatement(
+                        ProductQuery.DELETE.getQuery()
+                )
+        ){
+            preparedStatement.setInt(1, id);
+            int rowInserted = preparedStatement.executeUpdate();
+            if (rowInserted > 0){
+                return true;
+            }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+        return status;
     }
 }

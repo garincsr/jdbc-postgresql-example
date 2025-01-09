@@ -15,13 +15,13 @@ public class MainConsole {
     private InputHandler inputHandler;
     private ProductConsole productConsole;
     private CustomerConsole customerConsole;
-    private TransactionConsole transactionConsole
+    private TransactionConsole transactionConsole;
 
-    public MainConsole(InputHandler inputHandler){
+    public MainConsole(InputHandler inputHandler, ProductConsole productConsole, CustomerConsole customerConsole, TransactionConsole transactionConsole) {
         this.inputHandler = inputHandler;
-        this.productConsole = new ProductConsole(new ProductServiceImpl(), this.inputHandler);
-        this.customerConsole = new CustomerConsole(new CustomerServiceImpl(), this.inputHandler);
-        this.transactionConsole = new TransactionConsole(new TransactionServiceImpl(), this.inputHandler);
+        this.productConsole = productConsole;
+        this.customerConsole = customerConsole;
+        this.transactionConsole = transactionConsole;
     }
 
     private void showMenu(){
@@ -44,7 +44,7 @@ public class MainConsole {
                     this.customerConsole.run();
                     break;
                 case 3:
-                    System.out.println("Transaction");
+                    this.transactionConsole.run();
                     break;
                 case 4:
                     return;

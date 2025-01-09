@@ -20,8 +20,9 @@ public class CustomerConsole {
         System.out.println("1. Add Customer");
         System.out.println("2. List Customer");
         System.out.println("3. Find Customer by ID");
-        System.out.println("3. Update Customer");
-        System.out.println("4. Back");
+        System.out.println("4. Find Customer by Phone Number");
+        System.out.println("5. Update Customer");
+        System.out.println("6. Back");
     }
 
     public void run(){
@@ -38,6 +39,8 @@ public class CustomerConsole {
                 case 3:
                     this.getCustomerById();
                     break;
+                case 4:
+                    this.getCustomerByPhoneNumber();
                 default:
                     System.out.println("Pilihan tidak valid");
             }
@@ -46,13 +49,20 @@ public class CustomerConsole {
     }
 
     private void createNewCustomer(){
+        Customer result = createNewCustomerHandler();
+        System.out.println("Success Create New Customer : " + result);
+    }
+
+    public Customer createNewCustomerHandler(){
         String customerName = this.inputHandler.getString("Customer Name: ");
         String customerAddress = this.inputHandler.getString("Customer Address: ");
         String customerPhoneNumber = this.inputHandler.getString("Phone Number: ");
         String customerBirthDate = this.inputHandler.getDateString("Birth Date: ");
 
-        Customer result = this.service.create(new Customer(customerName,customerAddress,customerPhoneNumber,customerBirthDate));
-        System.out.println("Success Create New Customer : " + result);
+        Customer customer = new Customer(customerName,customerAddress,customerPhoneNumber,customerBirthDate);
+        this.service.create(customer);
+
+        return customer;
     }
 
     private void getAllCustomer(){
@@ -63,12 +73,12 @@ public class CustomerConsole {
             return;
         }
         //header
-        System.out.printf("|%-5s |%-20s |%-20s |%-20s |%-20s\n",
+        System.out.printf("|%-5s |%-20s |%-20s |%-20s |%-15s|\n",
                 "ID","Name","Address","Phone Number","Birth Date"
         );
         System.out.println("-------------------------------------------------------------------------------------------");
         customers.stream()
-                .forEach(customer -> System.out.printf("|%-5s |%-20s |%-20s |%-20s |%-20s\n",
+                .forEach(customer -> System.out.printf("|%-5s |%-20s |%-20s |%-20s |%-15s|\n",
                         customer.getId(),
                         customer.getName(),
                         customer.getAddress(),
@@ -79,11 +89,38 @@ public class CustomerConsole {
 
     private void getCustomerById(){
         Integer askId = this.inputHandler.getInt("Masukkan ID Customer: ");
-        Customer customer = service.get(askId);
+        Customer customer = this.service.get(askId);
 
         // header
         System.out.printf("\n|%-5s |%-20s |%-20s |%-20s |%-20s\n", "ID","Name","Address","Phone Number","Birth Date");
         System.out.println("--------------------------------------------------------------------------------------");
-        System.out.printf("|%-5s |%-20s |%-20s |%-20s |%-20s\n\n", customer.getId(),customer.getName(),customer.getAddress(),customer.getPhoneNumber(),customer.getBirthDate());
+        System.out.printf("|%-5s |%-20s |%-20s |%-20s |%-20s\n\n",
+                customer.getId(),
+                customer.getName(),
+                customer.getAddress(),
+                customer.getPhoneNumber(),
+                customer.getBirthDate()
+
+        );
+    }
+
+    private void getCustomerByPhoneNumber(){
+         Customer customerByPhoneNumber = getCustomerByPhoneNumberHandler();
+
+        // header
+        System.out.printf("\n|%-5s |%-20s |%-20s |%-20s |%-20s\n", "ID","Name","Address","Phone Number","Birth Date");
+        System.out.println("--------------------------------------------------------------------------------------");
+        System.out.printf("|%-5s |%-20s |%-20s |%-20s |%-20s\n\n",
+                customerByPhoneNumber.getId(),
+                customerByPhoneNumber.getName(),
+                customerByPhoneNumber.getAddress(),
+                customerByPhoneNumber.getPhoneNumber(),
+                customerByPhoneNumber.getBirthDate()
+        );
+    }
+
+    public Customer getCustomerByPhoneNumberHandler(){
+        String askPhoneNumber = this.inputHandler.getString("Input Customer Phone Number: ");
+        return this.service.getByPhone(askPhoneNumber);
     }
 }

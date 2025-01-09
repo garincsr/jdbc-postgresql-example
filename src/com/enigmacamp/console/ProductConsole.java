@@ -21,7 +21,8 @@ public class ProductConsole {
         System.out.println("2. List Product");
         System.out.println("3. Find Product by ID");
         System.out.println("4. Update Product");
-        System.out.println("5. Back");
+        System.out.println("5. Delete Product");
+        System.out.println("6. Back");
     }
 
     public void run(){
@@ -40,6 +41,9 @@ public class ProductConsole {
                     break;
                 case 4:
                     return;
+                case 5:
+                    this.deleteProductById();
+                    break;
                 default:
                     System.out.println("Pilihan tidak valid");
             }
@@ -63,18 +67,17 @@ public class ProductConsole {
         // header
         System.out.printf("\n|%-5s |%-20s |%-10s\n", "ID","Name","Price");
         System.out.println("-------------------------------------------");
-        for (Product product : products){
-            System.out.printf("|%-5s |%-20s |Rp%,d%n",
-                    product.getId(),
-                    product.getName(),
-                    product.getPrice()
-            );
-        }
+        products.stream()
+                .forEach(product -> System.out.printf("|%-5s |%-20s |Rp%,d%n",
+                        product.getId(),
+                        product.getName(),
+                        product.getPrice()
+                ));
         System.out.println();
     }
 
     private void getProductById(){
-        Integer askId = this.inputHandler.getInt("Masukkan ID Product: ");
+        Integer askId = this.inputHandler.getInt("Input ID Product: ");
         Product product = service.get(askId);
 
         // header
@@ -82,4 +85,18 @@ public class ProductConsole {
         System.out.println("-------------------------------------------");
         System.out.printf("|%-5s |%-20s |%-10s\n\n", product.getId(),product.getName(),product.getPrice());
     }
+
+    private void deleteProductById(){
+        Integer askId = this.inputHandler.getInt("Input ID Product: ");
+        Boolean deleteStatus = service.delete(askId);
+
+        if (deleteStatus){
+            System.out.println("Product Deleted!");
+        } else {
+            System.out.println("Delete product unsuccess!");
+        }
+
+        getAllProducts();
+    }
+
 }
