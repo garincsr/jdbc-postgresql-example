@@ -3,10 +3,12 @@ package com.enigmacamp.service.impl;
 import com.enigmacamp.config.DBConnector;
 import com.enigmacamp.entitiy.dto.request.TransactionDetailRequest;
 import com.enigmacamp.entitiy.dto.request.TransactionRequest;
+import com.enigmacamp.entitiy.dto.response.AllTransactionsResponse;
 import com.enigmacamp.entitiy.dto.response.TransactionDetailResponse;
 import com.enigmacamp.entitiy.dto.response.TransactionResponse;
 import com.enigmacamp.service.ProductService;
 import com.enigmacamp.service.TransactionService;
+import com.enigmacamp.utils.db_constant.customer.CustomerColumn;
 import com.enigmacamp.utils.db_constant.transaction.TransactionColumn;
 import com.enigmacamp.utils.db_constant.transaction.TransactionQuery;
 import com.enigmacamp.utils.db_constant.trx_detail.TrxQuery;
@@ -23,7 +25,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void createTransaction(TransactionRequest transactionRequest) {
+    public void createTransactionHandler(TransactionRequest transactionRequest) {
         try(
                 Connection connect = DBConnector.getConnection();
                 PreparedStatement preparedStatement = connect.prepareStatement(
@@ -136,6 +138,33 @@ public class TransactionServiceImpl implements TransactionService {
         }
 
         return transactionDetails;
+    }
+
+    public List<AllTransactionsResponse> getAllTransactionsHandler(){
+        List<AllTransactionsResponse> allTransactions = new ArrayList<>();
+        try(
+                Connection connect = DBConnector.getConnection();
+                PreparedStatement preparedStatement = connect.prepareStatement(
+                        TransactionQuery.GET_ALL_CUSTOMER_TRANSACTION.getQuery()
+                )
+        ){
+          ResultSet resultSet = preparedStatement.executeQuery();
+
+          while (resultSet.next()){
+              AllTransactionsResponse transactions = new AllTransactionsResponse();
+              transactions.setCustomerName(resultSet.getString(CustomerColumn.NAME.getColumnName()));
+              transactions.setTransactionCustomerId(resultSet.getInt(TransactionColumn.CUSTOMER_ID.getColumnName()));
+              transactions.setTransactionId(resultSet.getInt(TransactionColumn.ID.getColumnName()));
+              transactions.setTransactionDate(resultSet.getString(TransactionColumn.DATE.getColumnName()));
+              transactions.setTransactionIsPicked(resultSet.getString(TransactionColumn.IS_PICKED.getColumnName()));
+
+              allTransactions.add(transactions);
+          }
+        }catch (SQLException e){
+            System.out.println(e.getMessage());
+        }
+
+        return allTransactions;
     }
 
     public void transactionReceipt(TransactionResponse transactionResponse){

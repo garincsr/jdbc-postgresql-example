@@ -7,7 +7,12 @@ public enum TransactionQuery {
         FROM transaction t
         JOIN customers c ON t.customer_id = c.id
         WHERE t.id = ?
-    """);
+    """),
+    GET_ALL_CUSTOMER_TRANSACTION("""
+        SELECT c.name, t.customer_id, t.id, t.date, t.is_picked
+        FROM transaction t
+        JOIN customers c ON t.customer_id = c.id
+     """);
 
     private final String query;
     TransactionQuery(String query) {

@@ -4,7 +4,7 @@ public enum TransactionColumn {
     ID("id"),
     CUSTOMER_ID("customer_id"),
     DATE("date"),
-    IS_PICKED("is_Picked");
+    IS_PICKED("is_picked");
 
     private final String columnName;
 

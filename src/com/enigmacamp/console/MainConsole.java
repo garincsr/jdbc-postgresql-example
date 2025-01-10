@@ -28,7 +28,7 @@ public class MainConsole {
         System.out.println("=== Welcome to Enigma Laundry ===");
         System.out.println("1. Product Management");
         System.out.println("2. Customer Management");
-        System.out.println("3. Create Transaction");
+        System.out.println("3. Transaction Management");
         System.out.println("4. Exit");
     }
 

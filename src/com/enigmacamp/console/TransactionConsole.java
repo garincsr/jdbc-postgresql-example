@@ -2,11 +2,9 @@ package com.enigmacamp.console;
 
 import com.enigmacamp.entitiy.Customer;
 import com.enigmacamp.entitiy.Product;
-import com.enigmacamp.entitiy.Transaction;
-import com.enigmacamp.entitiy.TransactionDetail;
 import com.enigmacamp.entitiy.dto.request.TransactionDetailRequest;
 import com.enigmacamp.entitiy.dto.request.TransactionRequest;
-import com.enigmacamp.service.CustomerService;
+import com.enigmacamp.entitiy.dto.response.AllTransactionsResponse;
 import com.enigmacamp.service.ProductService;
 import com.enigmacamp.service.TransactionService;
 import com.enigmacamp.utils.InputHandler;
@@ -45,7 +43,8 @@ public class TransactionConsole {
                     isContinue = false;
                     break;
                 case 2:
-                    System.out.println("View Transaction");
+                    this.viewTransactions();
+                    isContinue = false;
                     break;
                 case 3:
                     return;
@@ -89,6 +88,7 @@ public class TransactionConsole {
 
         if (customer == null){
             System.out.println("Customer not available");
+            isFirstTimeCustomer();
             return;
         }
 
@@ -142,7 +142,7 @@ public class TransactionConsole {
                 case 1:
                     continue;
                 case 2:
-                    transactionService.createTransaction(new TransactionRequest(customerId, transactionDetails));
+                    transactionService.createTransactionHandler(new TransactionRequest(customerId, transactionDetails));
                     run();
                     isContinue = false;
                     break;
@@ -165,6 +165,27 @@ public class TransactionConsole {
         }
 
         return new TransactionDetailRequest(askProductQty,product.getId());
+    }
+
+    private void viewTransactions(){
+        List<AllTransactionsResponse> alltransactions = transactionService.getAllTransactionsHandler();
+
+        if (alltransactions.isEmpty()){
+            System.out.println("No Transaction");
+        }
+
+        alltransactions.forEach(transaction -> {
+            System.out.printf("\n|%-10s |%-10s |%-10s |%-20s |%-10s\n", "Customer Name", "Customer ID", "Transaction ID", "Date", "Picked Up Status");
+            System.out.println("--------------------------------------------------------------------------------------");
+            System.out.printf("|%-10s |%-10s |%-10s |%-20s |%-10s\n\n",
+                    transaction.getCustomerName(),
+                    transaction.getTransactionCustomerId(),
+                    transaction.getTransactionId(),
+                    transaction.getTransactionDate(),
+                    transaction.getTransactionIsPicked()
+            );
+        });
+
     }
 
 }
